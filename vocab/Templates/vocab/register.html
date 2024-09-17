@@ -1,0 +1,176 @@
+{% extends "vocab/base.html" %}
+{% load static %}
+{#{% block title %}Create an account{% endblock %}#}
+{% block content %}
+
+
+
+
+
+  <section class="p-0 d-flex align-items-center position-relative overflow-hidden">
+
+		<div class="container-fluid">
+			<div class="row">
+				<!-- left -->
+{#				<div class="col-12 col-lg-6 d-md-flex align-items-center justify-content-center bg-primary bg-opacity-10 vh-lg-100">#}
+        <div class="col-12 col-lg-6 d-md-flex align-items-center justify-content-center  vh-lg-100">
+					<div class="p-3 p-lg-5">
+						<!-- Title -->
+						<div class="text-center">
+							<h2 class="fw-bold">Зубрежка может быть умной</h2>
+							<p class="mb-0 h6 fw-light">— с нашими карточками вы запомните слова быстро и легко!</p>
+						</div>
+						<!-- SVG Image -->
+{#            {% static 'img/registration.png' %}#}
+						<img src="{% static 'img/registration.png' %}" class="mt-5" alt="">
+						<!-- Info -->
+						<div class="d-sm-flex mt-5 align-items-center justify-content-center">
+							<ul class="avatar-group mb-2 mb-sm-0">
+
+								<li class="avatar avatar-sm"><img class="avatar-img rounded-circle" src="{% static 'img/avatar/01.jpg' %}" alt="avatar"></li>
+								<li class="avatar avatar-sm"><img class="avatar-img rounded-circle" src="{% static 'img/avatar/02.jpg' %}" alt="avatar"></li>
+								<li class="avatar avatar-sm"><img class="avatar-img rounded-circle" src="{% static 'img/avatar/03.jpg' %}" alt="avatar"></li>
+								<li class="avatar avatar-sm"><img class="avatar-img rounded-circle" src="{% static 'img/avatar/04.jpg' %}" alt="avatar"></li>
+							</ul>
+							<!-- Content -->
+							<p class="mb-0 h6 fw-light ms-0 ms-sm-3">4000+ пользователей уже учат новые слова вместе с нами. Присоединяйся!</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Right -->
+				<div class="col-12 col-lg-6 m-auto">
+					<div class="row my-5">
+						<div class="col-sm-10 col-xl-8 m-auto">
+							<!-- Title -->
+{#							<img src="assets/images/element/03.svg" class="h-40px mb-2" alt="">#}
+							<h3>Создайте учетную запись!</h3>
+{#							<p class="lead mb-4">Рады вас видеть! Пожалуйста, войдите в свой аккаунт или зарегистрируйтесь.</p>#}
+
+							<!-- Form START -->
+
+
+              <form method="post">
+                {% csrf_token %}
+                <!-- Username -->
+                <div class="mb-4">
+                  <label for="{{ user_form.username.id_for_label }}" class="form-label">Username</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i
+                        class="bi bi-person"></i></span>
+                    <input type="text" class="form-control border-0 bg-light rounded-end ps-1" placeholder="Username"
+                           id="{{ user_form.username.id_for_label }}" name="username"
+                           value="{{ user_form.username.value|default_if_none:'' }}">
+                    {{ user_form.username.errors }}
+                  </div>
+                </div>
+
+
+                <!-- Password -->
+                <div class="mb-4">
+                  <label for="{{ user_form.password.id_for_label }}">Пароль *</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i
+                        class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control border-0 bg-light rounded-end ps-1"
+                           placeholder="*********" id="{{ user_form.password.id_for_label }}"
+                           name="password">
+                    {{ user_form.password.errors }}
+                  </div>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="mb-4">
+                  <label for="{{ user_form.password2.id_for_label }}">Подтвердите пароль *</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i
+                        class="fas fa-lock"></i></span>
+                    <input type="password" class="form-control border-0 bg-light rounded-end ps-1"
+                           placeholder="*********" id="{{ user_form.password2.id_for_label }}"
+                           name="password2">
+                    {{ user_form.password2.errors }}
+                  </div>
+                </div>
+
+                <!-- Email -->
+                <div class="mb-4">
+                  <label for="{{ user_form.email.id_for_label }}">Email address *</label>
+                  <div class="input-group input-group-lg">
+                    <span class="input-group-text bg-light rounded-start border-0 text-secondary px-3"><i
+                        class="bi bi-envelope-fill"></i></span>
+                    <input type="email" class="form-control border-0 bg-light rounded-end ps-1" placeholder="E-mail"
+                           id="{{ user_form.email.id_for_label }}" name="email"
+                           value="{{ user_form.email.value|default_if_none:'' }}">
+                    {{ user_form.email.errors }}
+                  </div>
+                </div>
+
+                <!-- Button -->
+                <div class="align-items-center mt-0">
+                  <div class="d-grid">
+                    <button class="btn btn-primary mb-0" type="submit">Создать аккаунт</button>
+                  </div>
+                </div>
+              </form>
+
+							<!-- Social buttons -->
+							<div class="row">
+								<!-- Divider with text -->
+								<div class="position-relative my-4">
+									<hr>
+									<p class="small position-absolute top-50 start-50 translate-middle bg-body px-5">Or</p>
+								</div>
+								<!-- Social btn -->
+								<div class="col-xxl-12 d-grid">
+                  <a href="{% url 'social:begin' 'google-oauth2' %}"
+                     class="btn btn-block btn-social btn-google border border-secondary rounded btn-outline-secondary btn-hover-secondary btn-focus-secondary"
+                     onmouseover="_gaq.push(['_trackEvent', 'btn-social', 'click', 'btn-google'])"
+                     onclick="_gaq.push(['_trackEvent', 'btn-social', 'click', 'btn-google']);">
+                                    <span class="fa fa-google">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor"
+                                             class="bi bi-google" viewBox="0 0 16 16">
+                                           <path
+                                               d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"></path>
+                                        </svg>
+                                    </span>
+                    Войти с помощью Google
+                  </a>
+{#                  {% url 'social:begin' 'google-oauth2' %}#}
+{#									<a href="{% url 'social:begin' 'google-oauth2' %}" class="btn bg-google mb-2 mb-xxl-0"><i class="fab fa-fw fa-google text-white me-2"></i>Войти с помощью Google</a>#}
+								</div>
+{#								<!-- Social btn -->#}
+{#								<div class="col-xxl-6 d-grid">#}
+{#									<a href="#" class="btn bg-facebook mb-0"><i class="fab fa-fw fa-facebook-f me-2"></i>Signup with Facebook</a>#}
+{#								</div>#}
+							</div>
+
+							<!-- Sign up link -->
+							<div class="mt-4 text-center">
+								<span>Уже есть аккаунт? <a href='{% url 'login' %}'>Войдите здесь</a></span>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+
+
+
+{##}
+{##}
+{#    <h1>Create an account</h1>#}
+{#    <p>Please, sign up using the following form:</p>#}
+{#    <form method="post">#}
+{#      {% csrf_token %}#}
+{#      {{ user_form.as_p }}#}
+{##}
+{#    <p><input type="submit" value="Create my account"></p>#}
+{#    </form>#}
+
+
+
+
+{% endblock %}

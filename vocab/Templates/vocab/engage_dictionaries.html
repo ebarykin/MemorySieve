@@ -1,0 +1,109 @@
+{% extends 'vocab/base.html' %}
+{% block content %}
+  <div class="container">
+    <section class="py-3 py-lg-2">
+      <div class="card shadow-sm mb-3 mt-3 rounded">
+        <div class="card-header">
+          <div class="row">
+            <div class="col-md-10">
+              <p><b>Расширяй свой словарный запас!! !!!!</b></p>
+              <p>Добавь новые словари к своему обучению. Отметь те, которые тебе интересны,
+                и они будут доступны после сохранения. Удачи! </p>
+            </div>
+            <div class="col-md-2">
+              {% if is_editor %}
+                <div class="float-end">
+                  <a href="{% url "add_dictionary" %}" class="btn btn-primary btn-sm mt-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-plus-circle" viewBox="0 0 16 16">
+                      <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"></path>
+                      <path
+                          d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"></path>
+                    </svg>
+                    New</a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+
+
+        <div class="container mt-3 mb-3">
+          <form method="post" action="{% url 'engage_dictionaries' %}">
+            <div class="row g-4">
+              {% csrf_token %}
+              {% for dict in dictionaries %}
+                <!-- Card item START -->
+                <div class="col-sm-6 col-lg-4 col-xl-3">
+
+                  <div class="card shadow h-100">
+                    {% if dict.picture %}
+                      <a href="{% url 'dictionary' dict_name=dict.slug %}">
+                        <img src="{{ dict.picture.url }}" class="card-img-top" alt="...">
+                      </a>
+                    {% endif %}
+                    <div class="card-body pb-0">
+
+                      <div class="d-flex justify-content-between mb-2">
+                        {% if dict.level == 'Beginner' %}
+                          <a href="#" id="levelBadge"
+                             class="badge bg-success bg-opacity-10 text-success">{{ dict.level }}</a>
+                        {% endif %}
+                        {% if dict.level == 'Intermediate' %}
+                          <a href="#" id="levelBadge" class="badge bg-info bg-opacity-10 text-info">{{ dict.level }}</a>
+                        {% endif %}
+                        {% if dict.level == 'Advanced' %}
+                          <a href="#" id="levelBadge"
+                             class="badge bg-danger bg-opacity-10 text-danger">{{ dict.level }}</a>
+                        {% endif %}
+                        {% if dict.level == 'All level' %}
+                          <a href="#" id="levelBadge"
+                             class="badge bg-purple bg-opacity-10 text-purple">{{ dict.level }}</a>
+                        {% endif %}
+                      </div>
+
+                      <h5 class="card-title fw-normal"><a
+                          href="{% url 'dictionary' dict_name=dict.slug %}">{{ dict.dict_name }}</a></h5>
+                      <p class="text-truncate-2 mb-2">{{ dict.description }}</p>
+
+                      {% if not dict.published %}
+                        <p class="alert alert-warning">not published</p>
+
+                      {% endif %}
+                    </div>
+
+                    <!-- Card footer -->
+
+                    <div class="card-footer pt-1 pb-1">
+                      <div class="d-flex justify-content-center align-items-center">
+                        <div class="form-check form-switch">
+                          <label>
+                            <input class="form-check-input " type="checkbox" name="opted_dicts"
+                                   value="{{ dict.dict_name }}"
+                                   {% if dict.dict_name in form.opted_dicts.initial %}checked{% endif %}>
+                          </label>
+                        </div>
+
+
+                      </div>
+                    </div>
+
+
+                  </div>
+                </div>
+              {% endfor %}
+
+            </div>
+            <button type="submit" class="btn btn-success mt-3">Сохранить</button>
+
+          </form>
+
+        </div>
+
+      </div>
+    </section>
+  </div>
+
+
+
+{% endblock %}

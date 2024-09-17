@@ -1,0 +1,9 @@
+.idea/
+.env
+/db.sqlite3
+/cert.crt
+/cert.key
+/venv/
+/media/
+*.pyc
+__pycache__/

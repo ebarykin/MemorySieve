@@ -1,0 +1,19 @@
+{% load static %}
+
+<section class="py-lg-4 py-3 bg-light">
+{#    <div class="card bg-blue rounded-0 p-3 position-relative overflow-hidden">#}
+{#      <div#}
+{#          style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: url('{% static 'img/background/05.png' %}') no-repeat center center / cover;"></div>#}
+{#      <!-- Содержимое вашего блока card -->#}
+{#    </div>#}
+
+    <div class="container">
+
+        <div class="row">
+            {% block content %}
+                {% include 'vocab/profile_navbar_wrapper.html' %}
+                {% include content_ %}
+            {% endblock %}
+        </div>
+    </div>
+</section>

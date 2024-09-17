@@ -1,0 +1,310 @@
+{% extends 'vocab/base.html' %}
+
+{% block title %}
+  Карточка слова
+{% endblock %}
+
+{% block content %}
+
+  <div class="container">
+    <section class="py-3 py-lg-2">
+      <div class="mb-4 card mt-3 shadow">
+        <div class="text-muted card-body">
+
+          <ul class="nav nav-tabs mx-2 mt-2" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+              <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home-tab-pane"
+                      type="button" role="tab" aria-controls="home-tab-pane" aria-selected="true">Карточка слова
+              </button>
+            </li>
+            <li class="nav-item" role="presentation">
+              <button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile-tab-pane"
+                      type="button" role="tab" aria-controls="profile-tab-pane" aria-selected="false">
+                История изучения слова
+              </button>
+            </li>
+            <li class="nav-item ms-auto">
+              <a class="badge text-bg-secondary"
+                 href="{% url 'dictionary' dict_name=dict_name %}">{{ dict_name }}</a>
+            </li>
+          </ul>
+
+          <div class="tab-content" id="myTabContent">
+            <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+                 tabindex="0">
+              <div class="card-body">
+                <style>
+                    .icon {
+                        font-size: 1.5rem; /* Установка размера иконок */
+                        transition: color 0.3s ease; /* Добавление плавного перехода цвета */
+                    }
+
+                    .icon:hover {
+                        color: orangered; /* Изменение цвета при наведении */
+                    }
+                </style>
+                <div class="d-flex flex-row justify-content-between align-items-center mb-1">
+                  <div id="audio_br" class="font-italic fs-5 col-1 text-center"></div>
+                  <div id="phons_br" class="font-italic fs-5 col-3">Br:</div>
+                  <div id="audio_us" class="font-italic fs-5 col-1 text-center"></div>
+                  <div id="phons_us" class="font-italic fs-5 col-3">Ame:</div>
+                  <div class="font-italic fs-7 col-4 text-end">
+                    <a href="{{ word.oxf_url }}" target="_blank">Oxford link</a>
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-9">
+                    <div class="card card-body p-4 border-0">
+                      <div>
+                        <p>
+                          <span class="fs-2 mb-0">
+                            <strong class="text-dark-emphasis ms-1">{{ word.u_eng_word }} &nbsp;</strong>
+                          </span>
+                          {% if word.part_of_speech %}
+                            <span
+                                class="{% if word.part_of_speech == 'verb' %} text-danger
+                                        {% elif word.part_of_speech == 'noun' %} text-primary
+                                        {% elif word.part_of_speech == 'adjective' %} text-success
+                                        {% elif word.part_of_speech == 'phrasal verb' %} text-orange
+                                        {% endif %}">
+                                {{ word.part_of_speech }}
+                            </span>
+                          {% endif %}
+                        </p>
+                      </div>
+
+                      <div class="table-responsive border-0 rounded-3">
+                        <table class="table align-middle p-4 mb-0">
+                          <tbody class="border-top-0">
+                          <tr>
+                            <td>
+                              <div class="d-lg-flex align-items-center">
+                                Перевод:<h6 class="mb-0 ms-lg-3 mt-2 mt-lg-0"><b> {{ word.rus_word }} </b></h6>
+                              </div>
+                            </td>
+                          </tr>
+
+                          {% if word.hint %}
+                            <tr>
+                              <td>
+                                <div class="d-lg-flex align-items-center">
+                                  Подсказка:<h6 class="mb-0 ms-lg-3 mt-2 mt-lg-0"><b> {{ word.hint }} </b></h6>
+                                </div>
+                              </td>
+                            </tr>
+                          {% endif %}
+
+                          {% if word.synonym %}
+                            <tr>
+                              <td>
+                                <div class="d-lg-flex align-items-center">
+                                  Синоним:<h6 class="mb-0 ms-lg-3 mt-2 mt-lg-0"><b> {{ word.synonym }} </b></h6>
+                                </div>
+                              </td>
+                            </tr>
+                          {% endif %}
+
+                          </tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+
+                  <!-- КАРТИНКА -->
+                  <div class=" col-3 h-100 d-flex flex-column justify-content-center align-items-center">
+                    <!-- Заглушка в виде изображения -->
+                    {% if word.pict %}
+                      <div class="card" style="width: 15rem;">
+                        <img src="{{ word.pict.picture.url }}" class="thumbnail img-responsive"
+                             style="height: 15rem" alt="...">
+                      </div>
+                    {% else %}
+                    {% endif %}
+                  </div>
+
+                </div>
+
+
+                <!-- Примеры использования -->
+                <div class="mb-5">
+                  <p class="text-dark-emphasis ">Примеры использования:</p>
+                  {% for example in word.usage_examples.all %}
+                    <strong class="text-dark-emphasis ms-1"> {{ example.eng_text }} - {{ example.rus_text }}</strong>
+                  {% endfor %}
+                </div>
+
+
+                <div class="container">
+                  <div class="row">
+                    <div class="col-sm-8">
+                      <a href="{% url 'all_dict' %}" class="btn btn-secondary">Назад</a>
+                    </div>
+
+                    {% if is_editor or dict_name == 'personal' %}
+                      <div class="col-sm-4 gap-2 d-md-flex justify-content-md-end">
+                        <!-- Кнопка для открытия модального окна -->
+                        <button id="openEditModalButton" class="btn btn-success" data-word-id="{{ word.id }}"
+                        data-dictionary-name="{{ dict_name }}">Редактировать карточку</button>
+
+                        <form id="delete-form" action="{% url 'delete_card' word_id=word.id %}"
+                              method="post">
+                          {% csrf_token %}
+                          <input type="hidden" name="delete" value="true">
+                          <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                  data-bs-target="#confirmDeleteModal">
+                            Удалить
+                          </button>
+                        </form>
+
+                      </div>
+                    {% else %}
+                      <div class="col-sm-4" style="display: none;"></div>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="tab-pane fade" id="profile-tab-pane" role="tabpanel" aria-labelledby="profile-tab"
+                 tabindex="0">
+              <div class="card-body">
+                <table class="table table-bordered">
+                  <thead>
+                  <tr>
+                    <th colspan="11">ИСТОРИЯ ПРОВЕРКИ СЛОВА</th>
+                  </tr>
+                  <tr>
+                    <th style="width: 40px;">Дата проверки</th>
+                    {% for item in hist %}
+                      <th style="width: 40px;">{{ item.ch_date }}</th>
+                    {% endfor %}
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr>
+                    <th scope="row">Статус</th>
+                    {% for item in hist %}
+                      <td class="{% if item.ch_result %}green{% else %}red{% endif %}">
+                        {% if item.ch_result %}OK{% else %}НОК{% endif %}
+                      </td>
+                    {% endfor %}
+                  </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- Контейнер для модального окна -->
+    <div id="modalContainer"></div>
+
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="messagesModalLabel"
+         aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="messagesModalLabel">Сообщение</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Удалить карточку <b> {{ word_form.eng_word.value }} </b> ?
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+            <button type="submit" class="btn btn-danger"
+                    onclick="document.getElementById('delete-form').submit()">Удалить
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+  </div>
+
+
+  <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const engWord = "{{ word.u_eng_word }}";  // Передаем значение из контекста Django
+          const url = `/get-oxf-data/${engWord}/`;  // Формируем URL с параметром eng_word
+
+          function handleResponse(data) {
+              if (data.oxf_data) {
+                  document.getElementById('phons_br').innerText = `Br: ${data.oxf_data.phons_br}`;
+                  document.getElementById('phons_br').classList.remove('font-italic');
+                  document.getElementById('phons_br').classList.add('font-weight-bold');
+
+                  document.getElementById('phons_us').innerText = `Ame: ${data.oxf_data.phons_us}`;
+                  document.getElementById('phons_us').classList.remove('font-italic');
+                  document.getElementById('phons_us').classList.add('font-weight-bold');
+
+                  if (data.oxf_data.audio_url_br) {
+                      createAudioButton('audio_br', data.oxf_data.audio_url_br);
+                  }
+
+                  if (data.oxf_data.audio_url_us) {
+                      createAudioButton('audio_us', data.oxf_data.audio_url_us);
+                  }
+              }
+          }
+
+          function createAudioButton(containerId, audioUrl) {
+              const container = document.getElementById(containerId);
+              const playButton = document.createElement('a');
+              container.classList.remove('bi');
+              playButton.href = '#';
+              playButton.innerHTML = '<i class="bi bi-megaphone fs-5 icon"></i>';
+              container.appendChild(playButton);
+
+              const audio = document.createElement('audio');
+              const source = document.createElement('source');
+              source.src = audioUrl;
+              source.type = 'audio/mpeg';
+              audio.appendChild(source);
+              container.appendChild(audio);
+
+              playButton.addEventListener('click', function (event) {
+                  event.preventDefault();
+                  audio.play();
+              });
+          }
+
+          fetch(url)
+              .then(response => response.json())
+              .then(data => handleResponse(data))
+              .catch(error => console.error('Error fetching data:', error));
+      });
+  </script>
+
+  <!-- Подключение JS -->
+  <script>
+      document.getElementById('openEditModalButton').addEventListener('click', function () {
+          let wordId = this.getAttribute('data-word-id');  // Получаем ID слова
+          let dict_name = this.getAttribute('data-dictionary-name');
+          {#let dictionaryName = this.getAttribute('data-dictionary-name');  // Получаем имя словаря#}
+
+          fetch('/edit_card/' + dict_name +'/' + wordId + '/')
+              .then(response => response.text())
+              .then(html => {
+                  // Вставляем HTML модального окна в контейнер
+                  document.getElementById('modalContainer').innerHTML = html;
+                  // Инициализируем модальное окно после вставки
+                  let myModal = new bootstrap.Modal(document.getElementById('editWordModal'));
+                  myModal.show();
+              })
+              .catch(error => console.error('Ошибка загрузки модального окна:', error));
+      });
+  </script>
+
+
+
+
+{% endblock %}

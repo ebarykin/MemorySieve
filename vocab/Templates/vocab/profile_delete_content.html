@@ -1,0 +1,76 @@
+{% load static %}
+<div class="col-lg-9 col-md-8">
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-lg-5">
+            <div class="mb-5">
+                <h4 class="mb-1">Удаление вашего профиля</h4>
+                <p class="mb-0 fs-6">
+                  При удалении аккаунта будут безвозвратно удалены все слова и данные, которые вы накопили. Чтобы
+                  избежать потери важных данных, пожалуйста, экспортируйте их перед удалением. <br>
+
+                  Вы можете сделать это в разделе "Персональный словарь" -> "Экспорт данных". <br>
+
+                  Пожалуйста, подтвердите, если вы все еще хотите удалить свой аккаунт.
+                </p>
+
+                <form id="delete-form" action="{% url 'profile_delete' user=user %}"
+                      method="post">
+                  {% csrf_token %}
+
+
+
+                  <input type="hidden" name="delete" value="true">
+                  <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmUserDeleteModal">
+                    Удалить
+                  </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="confirmUserDeleteModal" tabindex="-1" aria-labelledby="messagesModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="messagesModalLabel">Подтверждение удаления</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <b> Вы действительно хотите удалить свой аккаунт? <br>
+            Это действие невозможно отменить, и все ваши данные будут утеряны.</b>
+            <br>
+            Для подтверждения, пожалуйста решите пример:
+            <form id="confirmation-form" method="post">
+                {% csrf_token %}
+                <label for="answer">{{ num1 }} + {{ num2 }} =</label>
+                <input type="text" id="answer" name="answer" required>
+                <input type="hidden" name="delete" value="true">
+                <input type="hidden" name="expected_answer" value="{{ expected_answer }}">
+            </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="button" class="btn btn-danger" onclick="submitConfirmationForm()">Удалить аккаунт</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+<script>
+    function submitConfirmationForm() {
+        const answerField = document.getElementById('answer');
+        const correctAnswer = document.querySelector('input[name="expected_answer"]').value;
+
+        if (parseInt(answerField.value, 10) === parseInt(correctAnswer, 10)) {
+            document.getElementById('confirmation-form').submit();
+        } else {
+            alert('Ответ неправильный. Пожалуйста, попробуйте снова.');
+        }
+    }
+</script>

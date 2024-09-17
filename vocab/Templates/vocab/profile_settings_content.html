@@ -1,0 +1,24 @@
+<div class="col-lg-9 col-md-8">
+    <div class="card border-0 shadow-sm mb-4">
+        <div class="card-body p-lg-5">
+            <div class="mb-5">
+                <h4 class="mb-1">Account Information</h4>
+                <p class="mb-0 fs-6">Настройки профиля.</p>
+                <p>При необходимости вы можете изменить
+                    <a href="{% url 'profile_edit' user=user %}">данные профиля</a>
+                    и
+                    <a href="{% url 'password_change' %}">пароль</a>
+                    , чтобы информация была актуальной и аккаунт защищённым
+                </p>
+
+                <div>
+                    <form method="post" action="{% url 'profile_settings' user=user %}" class="text-center">
+                        {% csrf_token %}
+                        {{ hint_form.hint_type }}
+                        <button type="submit">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

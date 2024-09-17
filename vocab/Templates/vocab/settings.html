@@ -1,0 +1,154 @@
+{% extends 'vocab/base.html' %}
+
+{#{% block content %}#}
+{#    <h1>Страница с настройками</h1>#}
+{##}
+{#    Доступны следующие общие словари: <br>#}
+{#    {{ already_selected_dicts }} <br>#}
+{##}
+{#    <form method="post" action="{% url 'settings' %}">#}
+{#        {% csrf_token %}#}
+{#        <ul>#}
+{#            {% for dict in all_published_publ_dicts %}#}
+{#                <li>#}
+{#                    <label>#}
+{#                        <input type="checkbox" name="opted_dicts" value="{{ dict.dict_name }}"#}
+{#                                {% if dict.dict_name in form.opted_dicts.initial %} checked {% endif %}>#}
+{#                        {{ dict.dict_name }}#}
+{#                    </label>#}
+{#                </li>#}
+{#            {% endfor %}#}
+{#        </ul>#}
+{#        <button type="submit">Сохранить</button>#}
+{#    </form>#}
+{##}
+{##}
+{#    <br>#}
+{#    <p>#}
+{#        Account: <br>#}
+{#        You can <a href="{% url 'edit' %}">edit your profile</a>#}
+{#        or <a href="{% url 'password_change' %}">change your password</a>.#}
+{#    </p>#}
+{#{% endblock %}#}
+<!-- Подключение Bootstrap (замените ссылкой на актуальную версию) -->
+<!-- Подключение Bootstrap (замените ссылкой на актуальную версию) -->
+
+{#<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>#}
+{#<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>#}
+
+{% block content %}
+    {#    <div class="container">#}
+    {#        <h2 class="page-header">Настройки</h2>#}
+    {##}
+    {#        <div class="panel panel-default">#}
+    {#            <div class="panel-heading">#}
+    {#                <h2 class="panel-title">Общие словари</h2>#}
+    {##}
+    {#            </div>#}
+    {#            <div class="panel-body text-lg">#}
+    {#                            <p>В этом разделе вы имеете возможность расширить свой лингвистический арсенал, выбрав и#}
+    {#                подключив слова из наших общедоступных словарей. Это отличная возможность обогатить свой словарный запас#}
+    {#                и повысить качество вашего владения языком. Пройдите по списку доступных словарей и отметьте те, которые#}
+    {#                соответствуют вашим интересам и потребностям. После сохранения изменений выбранные слова станут#}
+    {#                                доступными для вас. Приятного обучения! </p>#}
+    {#                <form method="post" action="{% url 'settings' %}">#}
+    {#                    {% csrf_token %}#}
+    {#                    <ul>#}
+    {#                        {% for dict in all_published_publ_dicts %}#}
+    {#                            <li>#}
+    {#                                <label>#}
+    {#                                    <input type="checkbox" name="opted_dicts" value="{{ dict.dict_name }}"#}
+    {#                                            {% if dict.dict_name in form.opted_dicts.initial %} checked {% endif %}>#}
+    {#                                    {{ dict.dict_name }}#}
+    {#                                </label>#}
+    {#                            </li>#}
+    {#                        {% endfor %}#}
+    {#                    </ul>#}
+    {#                    <button type="submit" class="btn btn-success">Сохранить</button>#}
+    {#                </form>#}
+    {#            </div>#}
+    {#        </div>#}
+    {##}
+    {#        <div class="panel panel-default">#}
+    {#            <div class="panel-heading">#}
+    {#                <h2 class="panel-title">Аккаунт</h2>#}
+    {#            </div>#}
+    {#            <div class="panel-body text-lg">#}
+    {#                <p>При необходимости вы можете изменить <a href="{% url 'edit' %}">данные профиля</a> и <a#}
+    {#                        href="{% url 'password_change' %}">пароль</a>, чтобы информация была актуальной и аккаунт#}
+    {#                    защищённым</p>#}
+    {#                <p>You can <a href="{% url 'edit' %}">edit your profile</a>#}
+    {#                    or <a href="{% url 'password_change' %}">change your password</a>.</p>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </div>#}
+
+
+    <div class="accordion" id="accordionPanelsStayOpenExample">
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true"
+                        aria-controls="panelsStayOpen-collapseOne">
+                    Общие словари
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show"
+                 aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body">
+                    <p>В этом разделе вы имеете возможность расширить свой лингвистический арсенал, выбрав и
+                        подключив слова из наших общедоступных словарей. Это отличная возможность обогатить свой
+                        словарный запас
+                        и повысить качество вашего владения языком. Пройдите по списку доступных словарей и отметьте те,
+                        которые
+                        соответствуют вашим интересам и потребностям. После сохранения изменений выбранные слова станут
+                        доступными для вас. Приятного обучения! </p>
+                    <form method="post" action="{% url 'settings' %}">
+                        {% csrf_token %}
+                        <ul>
+                            {% for dict in all_published_publ_dicts %}
+                                <li>
+                                    <label>
+                                        <input type="checkbox" name="opted_dicts" value="{{ dict.dict_name }}"
+                                                {% if dict.dict_name in form.opted_dicts.initial %} checked {% endif %}>
+                                        {{ dict.dict_name }}
+                                    </label>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                        <button type="submit" class="btn btn-success">Сохранить</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false"
+                        aria-controls="panelsStayOpen-collapseTwo">
+                    Аккаунт
+                </button>
+            </h2>
+            <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse"
+                 aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body">
+                    <p>При необходимости вы можете изменить <a href="{% url 'profile_edit' %}">данные профиля</a> и <a
+                            href="{% url 'password_change' %}">пароль</a>, чтобы информация была актуальной и аккаунт
+                        защищённым</p></div>
+            </div>
+        </div>
+        {#  <div class="accordion-item">#}
+        {#    <h2 class="accordion-header" id="panelsStayOpen-headingThree">#}
+        {#      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">#}
+        {#        Accordion Item #3#}
+        {#      </button>#}
+        {#    </h2>#}
+        {#    <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">#}
+        {#      <div class="accordion-body">#}
+        {#        <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.#}
+        {#      </div>#}
+        {#    </div>#}
+        {#  </div>#}
+    </div>
+
+{% endblock %}

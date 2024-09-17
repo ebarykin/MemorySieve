@@ -1,0 +1,88 @@
+{% load static %}
+
+<div class="col-lg-9 col-md-8">
+
+{#  <div class="card border-0 shadow-sm mb-4">#}
+  <div class="card shadow-sm mb-4   ">
+
+    <div class="card-header bg-transparent border-bottom">
+      <h4 class="card-header-title mb-0">Редактировать профиль</h4>
+    </div>
+
+    <div class="card-body p-lg-4">
+      <div class="mb-3">
+        <form method="post" id="edit_profile" class="row g-4" enctype="multipart/form-data">
+          {% csrf_token %}
+          <!-- Profile picture -->
+          <div class="col-12 justify-content-center align-items-center">
+            <label class="form-label">Profile picture</label>
+            <div class="d-flex align-items-center">
+              <label class="position-relative me-4" for="uploadfile-1" title="Replace this pic">
+                <!-- Avatar place holder -->
+                <span class="avatar avatar-xl">
+                  {% if request.user.profile.photo %}
+                    <div class="avatar avatar-lg gap-3">
+                          <img class="avatar-img rounded-circle border border-white border-3 shadow"
+                               src="{{ request.user.profile.photo.url }}"
+                               alt="avatar">
+                      </div>
+                  {% else %}
+                    <i class="bi bi-person" style="font-size: 6rem;"></i>
+                  {% endif %}
+                </span>
+
+                <!-- Remove btn -->
+                <button type="submit" name="remove_avatar_btn" class="uploadremove"><i class="bi bi-x text-white"></i></button>
+
+              </label>
+              <!-- Upload button -->
+              {{ profile_form.photo }}
+
+            <label class="btn btn-primary-soft mb-0" for="uploadfile-1">Изменить</label>
+            <input id="uploadfile-1" class="form-control d-none" type="file">
+            </div>
+          </div>
+
+          <!-- Full name -->
+          <div class="col-12">
+            <label class="form-label">Full name</label>
+            <div class="input-group">
+              {{ user_form.first_name }}
+              {{ user_form.last_name }}
+            </div>
+          </div>
+
+          <!-- Username -->
+          <div class="col-md-6">
+            <label class="form-label">Username</label>
+            <div class="input-group">
+              {{ user_form.username }}
+            </div>
+          </div>
+
+          <!-- Email id -->
+          <div class="col-md-6">
+            <label class="form-label">Email id</label>
+            {{ user_form.email }}
+          </div>
+
+          <!-- About me -->
+          <div class="col-12">
+            <label class="form-label">Мои интересы</label>
+{#            <textarea class="form-control" rows="3">I’ve found a way to get paid for my favorite hobby, and do so while following my dream of traveling the world.</textarea>#}
+            {{ profile_form.interests }}
+
+            <div class="form-text">Опишите кратко ваши интересы.</div>
+          </div>
+
+          <!-- Save button -->
+          <div class="d-sm-flex justify-content-end">
+            <button type="submit" class="btn btn-primary mb-0">Сохранить изменения</button>
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,138 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <script>
+      // Применение темы немедленно при загрузке скрипта
+      (function () {
+          const htmlElement = document.documentElement;
+          const currentTheme = localStorage.getItem('bsTheme') || 'dark';
+          htmlElement.setAttribute('data-bs-theme', currentTheme);
+      })();
+  </script>
+
+  <meta charset="UTF-8">
+  <meta name="viewport"
+        content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <title>Document</title>
+
+  <!-- App favicon -->
+  <link rel="shortcut icon" href="{% static 'img/icons8-dragon-96.png' %}">
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
+
+  <!-- Theme CSS -->
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+
+
+{#  <!-- Tiny Slider -->#}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.8.1/tiny-slider.css">
+
+
+  {% block extra_styles %}
+    <!-- Дополнительные стили могут быть добавлены здесь в дочерних шаблонах -->
+  {% endblock %}
+
+{#  <style>#}
+{#      .navbar-custom-shadow {#}
+{#          box-shadow: 0 1px 3px rgba(80, 80, 80, 0.5);#}
+{#      }#}
+{#  </style>#}
+</head>
+
+<body class="bg-body">
+
+{% include 'vocab/base_nav.html' %}
+{% include 'vocab/add_word_modal.html' %}
+
+{% block content %}
+{% endblock %}
+
+<!-- Footer -->
+<div class="container px-0">
+  <div class="d-lg-flex justify-content-between align-items-center py-3 text-center text-md-left">
+    <!-- copyleft text -->
+    <div class="text-body text-primary-hover">
+      Copyleft <span class="copyleft" style="display:inline-block; transform: rotate(180deg);">&copy;</span> 2023 Sieve.
+      Designed by
+      <a href="#" target="_blank" class="text-body">Engineer</a>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="messagesModal" tabindex="-1" aria-labelledby="messagesModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messagesModalLabel">Сообщение</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Отображение сообщений -->
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }}" role="alert">
+            {{ message|safe }}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">ОК</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% if messages %}
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const messagesModal = new bootstrap.Modal(document.getElementById('messagesModal'));
+          messagesModal.show();
+      });
+  </script>
+{% endif %}
+
+
+<!-- Back to top -->
+<div class="back-top"><i class="bi bi-arrow-up-short position-absolute top-50 start-50 translate-middle"></i></div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+{#<!-- Tiny - Slider -->#}
+{#<script src="https://cdnjs.cloudflare.com/ajax/libs/tiny-slider/2.8.1/min/tiny-slider.js"></script>#}
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const htmlElement = document.documentElement;
+        const switchElement = document.getElementById('darkModeSwitch');
+
+        // Set the default theme to dark if no setting is found in local storage
+        const currentTheme = localStorage.getItem('bsTheme') || 'dark';
+        htmlElement.setAttribute('data-bs-theme', currentTheme);
+        switchElement.checked = currentTheme === 'dark';
+
+        switchElement.addEventListener('change', function () {
+            if (this.checked) {
+                htmlElement.setAttribute('data-bs-theme', 'dark');
+                localStorage.setItem('bsTheme', 'dark');
+            } else {
+                htmlElement.setAttribute('data-bs-theme', 'light');
+                localStorage.setItem('bsTheme', 'light');
+            }
+        });
+    });
+</script>
+
+{% block extra_scripts %}
+{% endblock %}
+
+</body>
+</html>

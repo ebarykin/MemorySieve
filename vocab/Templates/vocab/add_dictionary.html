@@ -1,0 +1,23 @@
+{% extends 'vocab/base.html' %}
+
+{% block title %}
+    Создать словарь
+{% endblock %}
+
+{% block content %}
+    <h1>Новый словарь</h1>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {% for field in form %}
+            <p>{{ field.label }}:{{ field }}  </p>
+            {% for error in field.errors %}
+                <span class="text-danger">{{ error }}</span>
+            {% endfor %}
+        {% endfor %}
+        <button type="submit" class="btn btn-success">Добавить</button>
+        <span>{{ error }}</span>
+    </form>
+
+
+
+{% endblock %}

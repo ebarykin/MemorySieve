@@ -1,0 +1,104 @@
+{% load static %}
+<div class="col-lg-9 col-md-8">
+  <div class="card shadow-sm mb-4   ">
+    <div class="card-body p-lg-2">
+      <div class="mb-5">
+        <div class="container text-center px-1">
+          <div class="row">
+            <div>
+              <h6 class="mb-2">Количество изучаемых слов</h6>
+              <table class="table table-sm">
+                {#                            <caption>Количество изучаемых слов</caption>#}
+                <thead>
+                <tr>
+                  <th scope="col">Персональный словарь</th>
+                  <th scope="col">Общие словари</th>
+                  <th scope="col">Всего слов</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                  <td>{{ pers_words_qty }}</td>
+                  <td>{{ pub_words_qty }}</td>
+                  <td><b>{{ total_words_qty }}</b></td>
+                </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <div class="row">
+            <h6 class="mb-2">История</h6>
+            <img src="data:image/png;base64,{{ calendar_img }}" alt="Calendar Plot">
+          </div>
+
+          <div class="row">
+            <h6 class="mb-2 mt-3">Прогресс</h6>
+            <div class="col">
+              <table class="table table-sm">
+                <thead>
+                <tr>
+                  <th scope="col">Уровни</th>
+                  <th scope="col">Количество слов</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for lvl, data in words_stat.items %}
+                  <tr>
+                    <td>
+                      <a href="{% url 'level' lvl %}">
+                        Уровень
+                        {% if lvl == '7' %}
+                          7 и выше
+                        {% else %}
+                          {{ lvl }}
+                        {% endif %}
+                      </a>
+                    </td>
+                    <td>{{ data }}</td>
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="col-6">
+              <div style="height: 250px" id="chartContainer"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script src="{% static 'js/canvasjs.min.js' %}"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chart = new CanvasJS.Chart("chartContainer",
+    {
+        theme: "light2",
+        title: {
+            text: "Уровни",
+        },
+        legend: {
+            maxWidth: 350,
+            itemWidth: 120
+        },
+        data: [
+        {
+            type: "doughnut",
+            indexLabelPlacement: "outside",
+            radius: "100%",
+            innerRadius: "50%",
+            showInLegend: false,
+            legendText: "{indexLabel}",
+            dataPoints: {{ data_points | safe }}
+        }
+        ]
+    });
+    chart.options.data[0].indexLabelFontSize = 20;
+    chart.render();
+});
+</script>

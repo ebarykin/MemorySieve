@@ -1,0 +1,85 @@
+{% extends 'vocab/base.html' %}
+
+{% block extra_styles %}
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    {% if user_words_with_dict_names %}
+      <section class="py-3 py-lg-2">
+        <div class="mb-4 card mt-3">
+          <div class="text-muted card-body">
+            <div class="table-wrapper">
+              <div class="table-title">
+                <div class="row">
+                  <div class="col-3">
+                    <h2>Мои слова</h2>
+                  </div>
+                  <div class="col-3">
+                    <a class="badge text-bg-secondary" href="{% url 'dictionary' dict_name='personal' %}">Персональный
+                      словарь</a>
+                  </div>
+                  <div class="col-6 text-end">
+
+                    <a class="btn btn-secondary btn-sm d-inline-flex align-items-center justify-content-center"
+                       href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addWordModal">
+
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                           fill="currentColor" class="bi bi-plus-circle me-1" viewBox="0 0 16 16">
+                        <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                        <path
+                            d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
+                      </svg>
+                      Добавить слово
+                    </a>
+                  </div>
+                </div>
+              </div>
+
+              <table class="table table-striped table-hover " id="dictTable">
+                <thead>
+                <tr>
+                  <th data-bs-toggle="tooltip" title="№">#</th>
+                  <th data-bs-toggle="tooltip" title="Слово">Слово</th>
+                  <th data-bs-toggle="tooltip" title="Перевод">Перевод</th>
+                  <th data-bs-toggle="tooltip" title="Пример">Пример</th>
+                  <th data-bs-toggle="tooltip" title="Перевод примера" style="width: 30%;">Перевод примера</th>
+                  <th data-bs-toggle="tooltip" title="Словарь">Словарь</th>
+                </tr>
+                </thead>
+                <tbody>
+
+                {% for word in user_words_with_dict_names %}
+                  <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><b><a href="{{ word.get_absolute_url }}"> {{ word.u_eng_word }} </a></b></td>
+                    <td>{{ word.rus_word }}</td>
+                    <td>{{ word.usage_examples.first.rus_text }}</td>
+                    <td>{{ word.usage_examples.first.eng_text }}</td>
+                    <td><a class="badge text-bg-secondary"
+                           href="{% url 'dictionary' dict_name=word.dict_name %}">{{ word.dict_name }}</a></td>
+
+                  </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+
+            </div>
+          </div>
+        </div>
+      </section>
+    {% else %}
+      <p> У Вас нет записей</p>
+    {% endif %}
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+
+  <script>
+      new DataTable('#dictTable');
+  </script>
+
+{% endblock %}

@@ -1,0 +1,68 @@
+  <!-- Add Word Modal -->
+  <div class="modal fade" id="addWordModal" tabindex="-1" aria-labelledby="messagesModalLabel" aria-hidden="true"
+       data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          {% if dict_name %}
+            <h5 class="modal-title" id="messagesModalLabel">Добавить слово в словарь {{ dict_name }} </h5>
+          {% else %}
+            <h5 class="modal-title" id="messagesModalLabel">Добавить слово в ваш персональный словарь</h5>
+          {% endif %}
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+
+          <form action="{% if dict_ %}{% url 'dictionary' dict_name=dict_.slug %}{% else %}{% url 'add_word_modal' %}{% endif %}" method="post" name="add_word">
+            {% csrf_token %}
+            <div class="modal-body">
+
+              <div class="form-group">
+                <label for="u_eng_word">English</label>
+                <input type="text"
+                       class="form-control"
+                       id="u_eng_word"
+                       name="u_eng_word"
+                       pattern="[a-zA-Z\s']+"
+                       title="Допускаются только английские буквы, пробелы и апострофы. "
+                       required>
+              </div>
+
+              <div class="form-group">
+                <label for="rus_word">Russian</label>
+                <input type="text" class="form-control" id="rus_word" name="rus_word">
+              </div>
+
+
+              <div class="form-group">
+                <label for="eng_example">English example</label>
+                <textarea class="form-control" id="eng_example" name="eng_text"></textarea>
+              </div>
+              <div class="form-group">
+                <label for="rus_example">Russian example</label>
+                <textarea class="form-control" id="rus_example" name="rus_text"></textarea>
+              </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+              <input type="button" class="btn btn-default" data-bs-dismiss="modal" value="Отмена">
+              <button type="submit" class="btn btn-success" name="word_add">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-floppy2-fill" viewBox="0 0 16 16">
+                  <path d="M12 2h-2v3h2z"></path>
+                  <path
+                      d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5V2.914a1.5 1.5 0 0 0-.44-1.06L14.147.439A1.5 1.5 0 0 0 13.086 0zM4 6a1 1 0 0 1-1-1V1h10v4a1 1 0 0 1-1 1zM3 9h10a1 1 0 0 1 1 1v5H2v-5a1 1 0 0 1 1-1"></path>
+                </svg>
+                Добавить слово
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>

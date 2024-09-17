@@ -1,0 +1,266 @@
+{% load static %}
+<nav class="navbar navbar-expand-xl z-index-9 navbar-custom-shadow">
+{#<nav class="navbar navbar-expand-lg navbar-custom-shadow">#}
+
+  <div class="container">
+    <!-- Logo START -->
+    <a class="navbar-brand" href="{% url 'index' %}"> SIEVE
+      <img class="light-mode-item navbar-brand-item" src="{% static 'css/logo_sieve.svg' %} " alt="logo">
+      <img class="dark-mode-item navbar-brand-item" src="{% static 'css/logo_sieve_dark.svg' %} " alt="logo">
+    </a>
+    <!-- Logo END -->
+
+    <!-- Reward -->
+<div class="d-flex align-items-center justify-content-center">
+    {% if reward %}
+        <a class="navbar-brand" href="{% url 'reward' %}">
+            <img class="navbar-brand-item glowing-image" src="{% static reward.img_path %}" alt="Treasure" width="48" height="48"/>
+        </a>
+    {% endif %}
+</div>
+
+<style>
+.glowing-image {
+    filter: drop-shadow(0 0 5px rgba(239, 213, 147, 0.8));
+    transition: filter 0.3s ease-in-out;
+}
+.glowing-image:hover {
+    filter: drop-shadow(0 0 10px rgb(151, 238, 253));
+}
+</style>
+  <!-- Reward end-->
+
+    <!-- Responsive navbar toggler -->
+    <button class="navbar-toggler ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse"
+            aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-animation">
+					<span></span>
+					<span></span>
+					<span></span>
+				</span>
+    </button>
+
+    <!-- Main navbar START -->
+    <div class="navbar-collapse collapse" id="navbarCollapse">
+
+      <!-- Nav Main menu START -->
+      {% if request.user.is_authenticated %}
+
+        <ul class="navbar-nav mx-auto align-items-lg-center fs-6">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown" href="{% url 'all_dict' %}" id="demoMenu"
+               data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><b>Мои словари</b>
+            </a>
+
+            <div class="dropdown-menu dropdown-menu-md" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item mb-3 text-body " href="{% url 'all_dict' %}">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-journal-bookmark-fill fs-4 text-primary"></i>
+                  <div class="ms-3 lh-1">
+                    <h6 class="mb-1">Мои слова</h6>
+                    <p class="mb-0 fs-6">Таблица всех ваших слов</p>
+                  </div>
+                </div>
+              </a>
+
+
+{#              <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addWordModal"#}
+
+
+{#              <a class="dropdown-item mb-3 text-body" href="{% url 'add_word_form' %}">#}
+              <a class="dropdown-item mb-3 text-body" href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addWordModal">
+                <div class="d-flex align-items-center">
+                  <i class="   bi bi-card-text fs-4 text-primary"></i>
+                  <div class="ms-3 lh-1">
+                    <h6 class="mb-1">Новое слово</h6>
+                    <p class="mb-0 fs-6">Добавить новую карточку в ваш словарь</p>
+                  </div>
+                </div>
+              </a>
+
+              <a class="dropdown-item mb-3 text-body" href="{% url 'engage_dictionaries' %}">
+                <div class="d-flex align-items-center">
+                  <i class="bi bi-folder-plus fs-4 text-primary"></i>
+                  <div class="ms-3 lh-1">
+                    <h6 class="mb-1">Словари</h6>
+                    <p class="mb-0 fs-6">Выбрать и подключить словари по темам</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </li>
+
+          <li class="nav-item">
+            <a class="nav-link" href="{% url 'training' %}" id="demoMenu"><b>Изучение</b></a>
+          </li>
+        </ul>
+      {% endif %}
+      <!-- Nav Main menu END -->
+    </div>
+    <!-- Main navbar END -->
+
+    {% if request.user.is_authenticated %}
+
+      <!-- Profile and notification START -->
+      <ul class="navbar-nav mx-auto align-items-lg-center">
+        <!-- Wishlist START -->
+        <li class="nav-item ms-0 ms-sm-2 d-none d-sm-block">
+          {% for group in request.user.groups.all %}
+            {% if group.name == 'Editors' %}
+              <span class="text-danger font-weight-bold">Editor</span>
+            {% endif %}
+          {% endfor %}
+        </li>
+
+{#        <li class="nav-item ms-0 ms-sm-2 d-none d-sm-block">#}
+{#          <a class="btn btn-light btn-round mb-0" href="#"> <i class="bi bi-heart fa-fw"></i></a>#}
+{#        </li>#}
+
+
+        <li class="nav-item ms-0 ms-sm-2 d-none d-sm-block dropdown">
+          <a class="btn btn-light btn-sm mb-0 shadow-hover rounded-pill bg-transparent" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                 fill="currentColor" class="icon-sm">
+              <image href="{% static '/svg/coin.svg' %}" width="24" height="24"></image>
+            </svg>
+            <b>{{ coins }}</b>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <div class="ms-3 lh-1">
+                <h6 class="mb-1">Монеты мороженого</h6>
+                {% if coins != 0 or ice_cream != 0 %}
+                  <p>Ты заработал {{ coins }} монеты! </p>
+                  <p>А это целых {{ ice_cream }} мороженых <img src="{% static '/svg/ice_cream_icon_175972.svg' %}" width="24" height="24"></p>
+                {% endif %}
+              </div>
+            </li>
+          </ul>
+        </li>
+
+        <li class="nav-item ms-0 ms-sm-2 d-none d-sm-block dropdown">
+          <a class="btn btn-light btn-sm mb-0 shadow-hover rounded-pill bg-transparent" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="1.5em" height="1.5em"
+                 fill="currentColor" class="h-[20px] w-[20px] h-4 w-4">
+
+              <g filter="url(#hot-filled_svg__filter0_i_289_12318)">
+                <path fill-rule="evenodd"
+                      d="M9.588 2.085a1 1 0 01.97.092c2.85 1.966 4.498 4.744 5.31 6.67l.854-.885a1 1 0 011.56.154c2.177 3.38 2.211 7.383.521 10.3C17.039 21.459 13.583 22 11.977 22c-1.569 0-4.905-.27-6.825-3.584-.832-1.435-1.27-3.053-1.125-4.704.146-1.66.876-3.284 2.264-4.721.86-.891 1.505-2.122 1.957-3.322.449-1.193.68-2.278.752-2.806a1 1 0 01.588-.778z"
+                      clip-rule="evenodd" fill="url(#hot-filled_svg__paint0_linear_289_12318)"
+                    {% if not strike.1 %} style="fill: #999999;" {% endif %}>
+                </path>
+              </g>
+
+              <defs>
+                <linearGradient id="hot-filled_svg__paint0_linear_289_12318" x1="12" x2="12" y1="2" y2="22"
+                                gradientUnits="userSpaceOnUse">
+                  <stop offset="0" stop-color="#FFA116"></stop>
+                  <stop offset="1" stop-color="#F9772E"></stop>
+                </linearGradient>
+                <filter id="hot-filled_svg__filter0_i_289_12318" width="17.2" height="21.2" x="4"
+                        y="2"
+                        color-interpolation-filters="sRGB" filterUnits="userSpaceOnUse">
+                  <feFlood flood-opacity="0" result="BackgroundImageFix"></feFlood>
+                  <feBlend in="SourceGraphic" in2="BackgroundImageFix" result="shape"></feBlend>
+                  <feColorMatrix in="SourceAlpha" result="hardAlpha"
+                                 values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0"></feColorMatrix>
+                  <feOffset dx="1.2" dy="1.2"></feOffset>
+                  <feGaussianBlur stdDeviation="0.6"></feGaussianBlur>
+                  <feComposite in2="hardAlpha" k2="-1" k3="1" operator="arithmetic"></feComposite>
+                  <feColorMatrix
+                      values="0 0 0 0 0.970833 0 0 0 0 0.05825 0 0 0 0 0 0 0 0 0.16 0"></feColorMatrix>
+                  <feBlend in2="shape" result="effect1_innerShadow_289_12318"></feBlend>
+                </filter>
+              </defs>
+            </svg>
+            <b>{{ strike.0 }}</b>
+          </a>
+          <ul class="dropdown-menu">
+            <li>
+              <div class="ms-3 lh-1">
+                <h6 class="mb-1">Пламя активности</h6>
+                {% if not strike.1 %}
+                  <p class="mb-0 fs-6">Повтори слова! Зажги огонь!</p>
+                {% else %}
+                  <p class="mb-0 fs-6">Молодец! Продолжай в том же духе!</p>
+                {% endif %}
+              </div>
+            </li>
+          </ul>
+        </li>
+
+        <!-- Profile dropdown START -->
+        <li class="nav-item ms-3 dropdown">
+          <!-- Avatar -->
+          <a class="avatar avatar-sm p-0" href="#" id="profileDropdown" role="button"
+             data-bs-auto-close="outside" data-bs-display="static" data-bs-toggle="dropdown" aria-expanded="false">
+            {% if request.user.profile.photo %}
+              <img class="avatar-img rounded-circle shadow-hover" src="{{ request.user.profile.photo.url }}" alt="avatar">
+            {% else %}
+              {% with first_initial=request.user.username.0|upper %}
+                <div class="avatar-img rounded-circle bg-primary">
+                  <span class="text-white position-absolute top-50 start-50 translate-middle fw-bold">
+                      {{ first_initial }}
+                  </span>
+                </div>
+              {% endwith %}
+            {% endif %}
+          </a>
+          <!-- Profile dropdown START -->
+          <ul class="dropdown-menu dropdown-animation dropdown-menu-end shadow pt-3" aria-labelledby="profileDropdown">
+
+            <!-- Profile info -->
+            <li class="px-3 mb-3">
+              <div class="d-flex align-items-center">
+                <!-- Avatar -->
+                <div>
+                  <a class="h5" href="{% url 'profile_dashboard' user=request.user.username %}">
+                    {{ request.user.first_name|default:request.user.username }}
+                  </a>
+                </div>
+              </div>
+            </li>
+            <!-- Links -->
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url 'profile_dashboard' user=request.user.username %}">
+              <i class="bi bi-graph-up-arrow me-2"></i>Статистика</a>
+            </li>
+            <li><a class="dropdown-item" href="{% url 'profile_edit' user=request.user.username %}">
+              <i class="bi bi-person fa-fw me-2"></i>Редактировать профиль</a>
+            </li>
+            <li><a class="dropdown-item" href="{% url 'profile_settings' user=request.user.username %}">
+              <i class="bi bi-gear fa-fw me-2"></i>Настройки аккаунта</a>
+            </li>
+            <li><a class="dropdown-item bg-danger-soft-hover" href="{% url "logout" %}">
+              <i class="bi bi-power fa-fw me-2"></i>Выйти</a>
+            </li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+
+            <!-- Dark mode switch START -->
+            <li class="px-3 bg-primary-soft-hover">
+              <div class="form-check form-switch ">
+                  <input class="form-check-input me-2" type="checkbox" id="darkModeSwitch" checked> <!-- Set the switch to "checked" by default -->
+                  <label class="form-check-label me-2" for="darkModeSwitch">Темный режим</label>
+              </div>
+            </li>
+            <!-- Dark mode switch END -->
+
+          </ul>
+          <!-- Profile dropdown END -->
+        </li>
+      </ul>
+    {% else %}
+      <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
+        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url "register" %}">Регистрация</a>
+        <span class="me-3 py-2 link-body-emphasis text-decoration-none">or</span>
+        <a class="me-3 py-2 link-body-emphasis text-decoration-none" href="{% url "login" %}">Войти в аккаунт</a>
+      </nav>
+    {% endif %}
+    <!-- Profile and notification END -->
+  </div>
+</nav>
+

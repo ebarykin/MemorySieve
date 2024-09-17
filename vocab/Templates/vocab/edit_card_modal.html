@@ -1,0 +1,102 @@
+<!-- Edit Card Modal -->
+<div class="modal fade" id="editWordModal" tabindex="-1" aria-labelledby="editWordModalLabel" aria-hidden="true">
+
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messagesModalLabel">Редактирование карточки слова {{ word.u_eng_word }}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post" id="edit-form" enctype="multipart/form-data"
+              action="{% url 'edit_card' dict_name word.id %}">
+          {% csrf_token %}
+          <input type="hidden" name="dict_name" value="{{ dict_name }}">
+
+          <div class="row mb-3">
+
+            <div class="col-8">
+              <div class="form-group mb-2">
+                <label for="{{ word_form.u_eng_word.id_for_label }}">Английское слово:</label>
+                <input type="text" id="{{ word_form.u_eng_word.id_for_label }}"
+                       name="{{ word_form.u_eng_word.html_name }}"
+                       class="form-control form-control-sm"
+                       required
+                       pattern="[a-zA-Z\s']+"
+                       title="Допускаются только английские буквы, пробелы и апострофы. "
+                       maxlength="50"
+                       placeholder="Введите английское слово"
+                       value="{{ word_form.u_eng_word.value }}">
+              </div>
+              <div class="form-group mb-2">
+                <label for="{{ word_form.rus_word.id_for_label }}">Перевод:</label>
+                {{ word_form.rus_word }}
+              </div>
+              <div class="form-group mb-2">
+                <label for="{{ word_form.synonym.id_for_label }}">Синоним:</label>
+                {{ word_form.synonym }}
+              </div>
+              <div class="form-group mb-2">
+                <label for="{{ word_form.hint.id_for_label }}">Подсказка:</label>
+                {{ word_form.hint }}
+              </div>
+              <div class="form-group col-md-3">
+                <label for="{{ word_form.part_of_speech.id_for_label }}">Часть речи:</label>
+                {{ word_form.part_of_speech }}
+              </div>
+            </div>
+
+            <div class="col-4">
+              {{ word_pict_form.as_p }}
+              {% if word.pict %}
+                <div class="card" style="width: 15rem;">
+                  <img src="{{ word.pict.picture.url }}" class="thumbnail img-responsive"
+                       style="height: 15rem" alt="{{ word.u_eng_word }}">
+                </div>
+              {% else %}
+              {% endif %}
+            </div>
+
+          </div>
+
+          {{ usage_form.management_form }}
+
+          <div class="table-responsive">
+            <table class="table table-hover table-sm">
+              <thead>
+              <tr>
+                <th colspan="2" class="align-middle text-center">№</th>
+                <th class="align-middle text-center">Пример</th>
+                <th class="align-middle text-center">Перевод</th>
+                <th class="align-middle text-center">Удалить</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for form in usage_form %}
+                <tr>
+                  <td class="align-middle text-center">{{ forloop.counter }}</td>
+                  <td class="align-middle text-center">{{ form.id }}</td>
+                  <td class="align-middle text-center">{{ form.eng_text }}</td>
+                  <td class="align-middle text-center">{{ form.rus_text }}</td>
+                  <td class="align-middle text-center">{{ form.DELETE }}</td>
+                </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+          </div>
+
+        </form>
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+        <button type="submit" form="edit-form" class="btn btn-warning">Сохранить изменения</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+

@@ -1,0 +1,15 @@
+{% extends 'vocab/base.html' %}
+
+{% block content %}
+  <div class="container">
+    <h1>Вход</h1>
+
+    <p>Пожалуйста, воспользуйтесь этой формой для входа:</p>
+
+    <form method="post">
+        {{ form.as_p }}
+        {% csrf_token %}
+        <p><input type="submit" value="Log in"></p>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,109 @@
+{% extends 'vocab/base.html' %}
+{% load static %}
+{% block title %}
+    Словарь
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="card shadow-sm mb-3 mt-3 rounded">
+      <div class="card-header mt-2">
+        <div class="row g-0">
+          <div class="col-md-2">
+            {% if dict_.dict_name == 'personal' %}
+              <img src="{% static 'img/Personal_1.jpg' %}" alt="Dictionary Image"
+                   class="rounded shadow border border-white border-2">
+            {% else %}
+              {% if dict_.picture %}
+                <img src="{{ dict_.picture.url }}" alt="Dictionary Image"
+                     class="rounded shadow border border-white border-2">
+              {% endif %}
+            {% endif %}
+          </div>
+          <div class="col-md-9">
+            <div><h5 class="card-title mb-0">Уровень {{ lvl }}.</h5>
+            </div>
+          </div>
+
+          <div class="col-md-1 d-flex align-items-end">
+          </div>
+        </div>
+      </div>
+
+      <div class="container ">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+             tabindex="0">
+          <div>
+            <div class="card-body">
+              {#                        <div class="container">#}
+              <div class="container">
+                <div class="row">
+                  <table class="table table-sm ">
+                    <thead>
+                    <tr>
+                      <th data-bs-toggle="tooltip" title="№">#</th>
+                      {#                                    <th data-bs-toggle="tooltip" title="id">id</th>#}
+                      <th data-bs-toggle="tooltip" title="Слово">Слово</th>
+                      <th data-bs-toggle="tooltip" title="Перевод">Перевод</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for word in words_by_lvl %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        {#                                        <td>{{ word.id }}</td>#}
+                        <td><b><a
+                            href="{{ word.get_absolute_url }}"> {{ word.eng_word }} </a></b>
+                        </td>
+                        <td>{{ word.rus_word }}</td>
+                      </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+
+
+                  <div class="col-sm-8">
+                    <a href="{% url 'all_dict' %}" class="btn btn-secondary">Назад</a>
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+     <!-- Delete Confirmation Modal -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="messagesModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messagesModalLabel">Сообщение</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Удалить карточку <b> {{ word_form.eng_word.value }} </b> ?
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                    <button type="submit" class="btn btn-danger" onclick="document.getElementById('delete-form').submit()">Удалить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Обработчик нажатия кнопки отправки формы
+        document.getElementById('submitButton').addEventListener('click', function () {
+            document.getElementById('comb_form').submit();
+        });
+    </script>
+
+
+{% endblock %}

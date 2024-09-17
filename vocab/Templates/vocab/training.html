@@ -1,0 +1,304 @@
+{% extends 'vocab/base.html' %}
+{% load static %}
+{% block content %}
+  <div class="container">
+    <section class="py-3 py-lg-2">
+
+      <div class="card shadow mb-3 mt-3 rounded">
+        <div class="card-header p-3">
+{#        <div class="card-header bg-blue p-3   position-relative overflow-hidden style="background:url(assets/images/pattern/04.png) no-repeat center center; background-size:cover;">#}
+          <div class="row g-0">
+
+            <div class="col-md-11">
+              Тренировка
+            </div>
+
+            <div class="col-md-1">
+
+              <div class="dropdown position-absolute top-0 end-0 my-2 mx-3">
+                <a href="#" data-bs-toggle="dropdown" aria-expanded="false" title="Открыть меню">
+                  <i class="bi bi-list fs-3"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" style="">
+
+                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#selectDict"
+                       class="dropdown-item"><i class="bi bi-sliders fs-5"></i>
+                      <span class="ms-2">Выбрать активные словари</span>
+                    </a>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+
+        <div class="card-body py-0" >
+          <div class="row">
+            <div class="col-9 ">
+              <p class="mb-1 mt-3">Прогресс изучения слова</p>
+              <div class="progress">
+                <div class="progress-bar progress-bar-striped {% if random_word.q_ok > 7 %}bg-success{% else %}{% endif %}" role="progressbar"
+                     style="width: {% widthratio random_word.q_ok 7 100 %}%"
+                     aria-valuenow="{% widthratio random_word.q_ok 7 100 %}"
+                     aria-valuemin="0" aria-valuemax="7">
+                  {{ random_word.q_ok }}
+                </div>
+              </div>
+
+              <p class="fs-2 mx-3 mt-3 mb-3 "><b>{{ random_word.rus_word }}</b></p>
+
+              {% if usage_examples %}
+                {% with random_example=usage_examples|random %}
+                  <p class="my-0 mx-2">Пример:</p>
+                  <p class="my-0 mx-2"><span class="fs-5">{{ random_example.rus_text }}</span></p>
+                  <p id="placeholder" class="d-none fw-bold fst-italic">
+                  {{ random_example.eng_text }}
+                {% endwith %}
+              {% else %}
+                <p>пример не найден</p>
+              {% endif %}
+            </div>
+
+            <div class="col-3">
+              <div class="float-end mt-3 h-250px">
+                {% if random_word.pict %}
+                  <div class="card" style="width: 15rem;">
+                    <img src="{{ random_word.pict.picture.url }}" class="thumbnail img-responsive"
+                         style="height: 15rem" alt="...">
+                  </div>
+                {% else %}
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <form method="post" action="{% url 'training' %}" class="text-center">
+            {% csrf_token %}
+            <div class="input-group mb-3">
+              <input type="text" class="form-control" id="user_translation" placeholder="Введите перевод слова"
+                     name="user_translation" autocomplete="off" autofocus>
+              <button type="submit" class="btn btn-outline-info" name="next_random"
+                      style="width: 300px; margin-left: 10px;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                     class="bi bi-shuffle" viewBox="0 0 16 16">
+                  <path fill-rule="evenodd"
+                        d="M0 3.5A.5.5 0 0 1 .5 3H1c2.202 0 3.827 1.24 4.874 2.418.49.552.865 1.102 1.126 1.532.26-.43.636-.98 1.126-1.532C9.173 4.24 10.798 3 13 3v1c-1.798 0-3.173 1.01-4.126 2.082A9.6 9.6 0 0 0 7.556 8a9.6 9.6 0 0 0 1.317 1.918C9.828 10.99 11.204 12 13 12v1c-2.202 0-3.827-1.24-4.874-2.418A10.6 10.6 0 0 1 7 9.05c-.26.43-.636.98-1.126 1.532C4.827 11.76 3.202 13 1 13H.5a.5.5 0 0 1 0-1H1c1.798 0 3.173-1.01 4.126-2.082A9.6 9.6 0 0 0 6.444 8a9.6 9.6 0 0 0-1.317-1.918C4.172 5.01 2.796 4 1 4H.5a.5.5 0 0 1-.5-.5"></path>
+                  <path
+                      d="M13 5.466V1.534a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192m0 9v-3.932a.25.25 0 0 1 .41-.192l2.36 1.966c.12.1.12.284 0 .384l-2.36 1.966a.25.25 0 0 1-.41-.192"></path>
+                </svg>
+                Следующее случайное слово
+              </button>
+            </div>
+            <input type="hidden" id="eng_word" name="eng_word" value="{{ random_word.eng_word }}">
+            <input type="hidden" id="word_id" name="word_id" value="{{ random_word.id }}">
+            <input type="hidden" id="q_ok" name="q_ok" value="{{ random_word.q_ok }}">
+          </form>
+
+          <a href="{{ random_word.get_absolute_url }}" class="btn btn-outline-success">Карточка слова</a>
+          <button type="button" class="btn btn-secondary " data-bs-container="body" data-bs-toggle="popover"
+                  data-bs-placement="right" data-bs-content='{{ random_word.hint }}'>Подсказка
+          </button>
+        </div>
+
+      </div>
+
+
+{#      <div class="accordion shadow-sm mb-3" id="dictionaryAccordion">#}
+{#        <div class="accordion-item">#}
+{#          <h2 class="accordion-header" id="selectDictHeader">#}
+{#            <button class="accordion-button" type="button" data-bs-toggle="collapse"#}
+{#                    data-bs-target="#selectDictCollapse" aria-expanded="true" aria-controls="selectDictCollapse">#}
+{#              Выберите активные словари:#}
+{#            </button>#}
+{#          </h2>#}
+{#          <div id="selectDictCollapse" class="accordion-collapse collapse" aria-labelledby="selectDictHeader"#}
+{#               data-bs-parent="#dictionaryAccordion">#}
+{#            <div class="accordion-body">#}
+{#              <form method="post" action="{% url 'training' %}" id="activeDictsForm" class="d-flex flex-wrap">#}
+{#                {% csrf_token %}#}
+{#                {{ active_dicts_form.as_p }}#}
+{#                <button type="submit" name="active_dicts_update">Submit</button>#}
+{#              </form>#}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
+
+
+
+
+    </section>
+  </div>
+
+
+
+
+{#  <div class="modal fade" id="selectDict" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel"#}
+{#       aria-hidden="true">#}
+{#    <div class="modal-dialog" role="document">#}
+{#      <div class="modal-content">#}
+{#        <div class="modal-header">#}
+{#          <h5 class="modal-title" id="errorModalLabel">Ошибка</h5>#}
+{#          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">#}
+{#            <span aria-hidden="true">&times;</span>#}
+{#          </button>#}
+{#        </div>#}
+{#        <div class="modal-body">#}
+{##}
+{##}
+{#          <form method="post" action="{% url 'training' %}" id="activeDictsForm" class="d-flex flex-wrap">#}
+{#            {% csrf_token %}#}
+{#            {{ active_dicts_form.as_p }}#}
+{#            <button type="submit" name="active_dicts_update">Submit</button>#}
+{#          </form>#}
+{#          #}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
+{#  </div>#}
+
+
+  <div class="modal fade" id="selectDict" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="messagesModalLabel">Выберите активные словари</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+
+          <form method="post" action="{% url 'training' %}" id="activeDictsForm" >
+            {% csrf_token %}
+            {{ active_dicts_form.as_p }}
+{#            <button type="submit" name="active_dicts_update" class="btn btn-warning">Сохранить изменения</button>#}
+          </form>
+
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+{#          <button type="submit" form="activeDictsForm" class="btn btn-warning">Сохранить изменения</button>#}
+          <button type="submit" name="active_dicts_update" form="activeDictsForm"  class="btn btn-primary">Сохранить изменения</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+  <div class="modal fade" id="errorModal" tabindex="-1" role="dialog" aria-labelledby="errorModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="errorModalLabel">Ошибка</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <ul class="messages">
+            {% for message in messages %}
+              <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Обработчик событий, восстанавливающий и сохраняющий состояние аккордеона в localStorage -->
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+
+          // Получаем ссылку на элемент аккордеона с id 'selectDictCollapse'
+          const selectDictCollapse = document.getElementById('selectDictCollapse');
+
+          // Проверяем состояние аккордеона в localStorage и применяем соответствующие классы
+          const isCollapsed = localStorage.getItem('accordionIsCollapsed') === 'true';
+
+          if (isCollapsed) {
+              selectDictCollapse.classList.remove('show');
+          } else {
+              selectDictCollapse.classList.add('show');
+          }
+
+
+          // Сохраняем состояние аккордеона в localStorage при его разворачивании и сворачивании
+          selectDictCollapse.addEventListener('show.bs.collapse', function () {
+              localStorage.setItem('accordionIsCollapsed', 'false');
+          });
+
+          selectDictCollapse.addEventListener('hide.bs.collapse', function () {
+              localStorage.setItem('accordionIsCollapsed', 'true');
+          });
+      });
+  </script>
+
+  <!-- подсветка строки ввода при правильном ответе -->
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const userTranslation = document.getElementById('user_translation');
+          const placeholder = document.getElementById('placeholder');
+
+          userTranslation.addEventListener('input', function () {
+              const engWord = '{{ random_word.eng_word }}';
+              const userInput = userTranslation.value.toLowerCase();
+
+              if (userInput === engWord.toLowerCase()) {
+                  userTranslation.style.backgroundColor = 'lightgreen';
+                  placeholder.classList.remove('d-none'); // Убираем класс d-none
+                  placeholder.classList.add('d-block'); // Добавляем класс d-block
+              } else {
+                  userTranslation.style.backgroundColor = '';
+                  placeholder.classList.remove('d-block'); // Убираем класс d-block
+                  placeholder.classList.add('d-none'); // Добавляем класс d-none
+              }
+          });
+      });
+  </script>
+
+  <!-- обработчик событий для модального окна 'errorModal' -->
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          var errorModal = document.getElementById('errorModal');
+          if (errorModal) {
+              errorModal.addEventListener('show.bs.modal', function (event) {
+                  var deleteButton = event.relatedTarget;
+              });
+          }
+      });
+  </script>
+
+  <!-- Enable popovers bs5 -->
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popover"]');
+          const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl));
+      });
+  </script>
+
+  <!-- Обновленный скрипт для отправки данных на сервер при изменении чекбоксов (без jQuery) -->
+  <script>
+      document.addEventListener('DOMContentLoaded', function () {
+          document.querySelectorAll('input[name="active_dicts"]').forEach(function (checkbox) {
+              checkbox.addEventListener('change', function () {
+                  // Отправляем данные на сервер при изменении чекбоксов
+                  document.getElementById('activeDictsForm').submit();
+              });
+          });
+      });
+  </script>
+
+
+
+
+
+{% endblock %}
+
+

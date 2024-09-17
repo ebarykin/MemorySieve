@@ -1,0 +1,43 @@
+{% extends 'vocab/base.html' %}
+{% load static %}
+
+{% block content %}
+<body class="bg-primary d-flex align-items-center justify-content-center"
+      style="background: url( {% static 'img/background/prize.jpg' %})
+             no-repeat center center fixed;
+             background-size: cover;
+             height: 100vh;">
+</body>
+
+<div id="rewardModal" class="modal fade" tabindex="-1" aria-labelledby="rewardModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title mx-auto" id="rewardModalLabel">У тебя есть приз!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body text-center">
+                <img src="{% static reward.img_path %}" alt="My Image" class="mb-3" style="width: 50%;">
+                <p>{{ reward.formatted_message }}</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const rewardModal = new bootstrap.Modal(document.getElementById('rewardModal'));
+        rewardModal.show();
+
+            // При закрытии модального окна перенаправить пользователя
+        document.getElementById('rewardModal').addEventListener('hidden.bs.modal', function () {
+            window.location.href = "{{ previous_url }}";
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "vocab/base.html" %}
+
+{% block title %} Log-in {% endblock %}
+
+{% block content %}
+  <div class="container">
+
+    {% if form.errors %}
+      <p>
+        Your username and password didn't match.
+        Please try again.
+      </p>
+    {% else %}
+
+      <section class="py-4 py-lg-5">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-4 offset-xl-4 col-md-12 col-12">
+              <div class="text-center">
+                <h3 class="mb-1">С возвращением! </h3>
+                <p class="mb-0">
+                  Нет аккаунта?
+                  <a href="{% url "register" %}" class="text-primary">Регистрация доступна здесь.</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row justify-content-center">
+          <div class="col-xl-5 col-lg-6 col-md-8 col-12">
+            <div class="card shadow p-4 rounded">
+              <div class="card-body">
+                <form action="{% url 'login' %}" method="post">
+                  <div class="mb-3">
+                    <label for="id_username" class="form-label">Имя пользователя:</label>
+                    <input type="text" id="id_username" name="username" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label for="id_password" class="form-label">Пароль:</label>
+                    <input type="password" id="id_password" name="password" class="form-control"
+                           required>
+                  </div>
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ next }}"/>
+                  <div class="d-grid">
+                    <button class="btn btn-primary" type="submit">Войти</button>
+                  </div>
+                </form>
+                <div class="mb-4 d-flex align-items-center justify-content-between">
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="rememberMeCheckbox">
+                    <label class="form-check-label" for="rememberMeCheckbox">Remember me</label>
+                  </div>
+
+                  <div><a href="{% url "password_reset" %}" class="text-primary">Забыли пароль</a></div>
+                </div>
+                <span>Авторизуйтесь через социальные сети.</span>
+                <div class="d-grid mt-3">
+                  <a href="{% url 'social:begin' 'google-oauth2' %}"
+                     class="btn btn-block btn-social btn-google border border-secondary rounded btn-outline-secondary btn-hover-secondary btn-focus-secondary"
+                     onmouseover="_gaq.push(['_trackEvent', 'btn-social', 'click', 'btn-google'])"
+                     onclick="_gaq.push(['_trackEvent', 'btn-social', 'click', 'btn-google']);">
+                                    <span class="fa fa-google">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             fill="currentColor"
+                                             class="bi bi-google" viewBox="0 0 16 16">
+                                           <path
+                                               d="M15.545 6.558a9.42 9.42 0 0 1 .139 1.626c0 2.434-.87 4.492-2.384 5.885h.002C11.978 15.292 10.158 16 8 16A8 8 0 1 1 8 0a7.689 7.689 0 0 1 5.352 2.082l-2.284 2.284A4.347 4.347 0 0 0 8 3.166c-2.087 0-3.86 1.408-4.492 3.304a4.792 4.792 0 0 0 0 3.063h.003c.635 1.893 2.405 3.301 4.492 3.301 1.078 0 2.004-.276 2.722-.764h-.003a3.702 3.702 0 0 0 1.599-2.431H8v-3.08h7.545z"></path>
+                                        </svg>
+                                    </span>
+                    Continue with Google
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+    {% endif %}
+  </div>
+{% endblock %}

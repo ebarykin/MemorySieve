@@ -1,0 +1,22 @@
+{% if widget.is_initial %}
+
+  {% if not widget.required %}
+
+  <input type="checkbox" name="{{ widget.checkbox_name }}" id="{{ widget.checkbox_id }}"
+      {% if widget.attrs.disabled %}
+         disabled
+      {% endif %}>
+  <label for="{{ widget.checkbox_id }}"> Удалить фото </label>
+
+  {% endif %}
+
+  <br>
+
+{% endif %}
+
+
+<label class="btn btn-primary-soft btn-sm mb-0">
+  {{ widget.input_text }}
+  <input type="{{ widget.type }}" name="{{ widget.name }}" style="display: none;"
+      {% include "django/forms/widgets/attrs.html" %}>
+</label>

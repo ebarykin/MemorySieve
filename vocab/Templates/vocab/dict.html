@@ -1,0 +1,295 @@
+{% extends 'vocab/base.html' %}
+{% load static %}
+{% block title %}
+  Словарь
+{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <div class="card shadow-sm mb-3 mt-3 rounded">
+
+      <div class="card-header p-2">
+        <div class="row g-0">
+          <div class="col-md-2">
+            {% if dict_.dict_name == 'personal' %}
+              <img src="{% static 'img/Personal_1.jpg' %}" alt="Dictionary Image"
+                   class="rounded shadow border border-white border-2">
+            {% else %}
+              {% if dict_.picture %}
+                <img src="{{ dict_.picture.url }}" alt="Dictionary Image"
+                     class="rounded shadow border border-white border-2">
+              {% endif %}
+            {% endif %}
+          </div>
+
+          <div class="col-md-9">
+            <div>
+              {% if dict_.dict_name == 'personal' %}
+                <div class="d-flex justify-content-between mb-2 mx-3 mb-sm-3">
+                  <h5 class="card-title mb-0">Ваш персональный словарь.</h5>
+                </div>
+              {% else %}
+                <div class="d-flex justify-content-between mb-2 mx-3 mb-sm-3">
+                  <h5 class="card-title mb-0">{{ dict_.dict_name }}</h5>
+                </div>
+                <span class="far fa-clock text-primary mx-3 me-2"><i>{{ dict_.description }}</i></span>
+              {% endif %}
+            </div>
+          </div>
+
+
+          <div class="col-md-1 position-relative">
+            <div class="dropdown position-absolute top-0 end-0 mt-3">
+              <a href="#" data-bs-toggle="dropdown" aria-expanded="false" title="Открыть меню">
+                <i class="bi bi-list fs-3"></i>
+              </a>
+              <div class="dropdown-menu dropdown-menu-end" style="">
+                {% if is_editor %}
+                  <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#dictEditModal"
+                     class="dropdown-item"><i class="bi bi-pencil-square fs-5"></i>
+                    <span class="ms-2">Редактировать словарь</span>
+                  </a>
+                  <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addWordModal"
+                     class="dropdown-item"><i class="bi bi-plus-square-dotted fs-5"></i>
+                    <span class="ms-2">Добавить слово</span>
+                  </a>
+                  <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addFromFileModal"
+                     class="dropdown-item"><i class="bi bi-upload fs-5"></i>
+                    <span class="ms-2">Загрузить слова из файла</span>
+                  </a>
+                  <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#toExelModal"
+                     class="dropdown-item"><i class="bi bi-box-arrow-down fs-5"></i>
+                    <span class="ms-2">Экспорт данных</span>
+                  </a>
+                  <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal"
+                     class="dropdown-item"><i class="bi bi-trash fs-5"></i>
+                    <span class="ms-2">Удалить словарь</span>
+                  </a>
+                {% else %}
+                  {% if dict_name == 'personal' %}
+                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addWordModal"
+                       class="dropdown-item"><i class="bi bi-plus-square-dotted fs-5"></i>
+                      <span class="ms-2">Добавить слово</span>
+                    </a>
+                    <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#addFromFileModal"
+                       class="dropdown-item"><i class="bi bi-upload fs-5"></i>
+                      <span class="ms-2">Загрузить слова из файла</span>
+                    </a>
+                  {% endif %}
+                  <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#toExelModal"
+                     class="dropdown-item"><i class="bi bi-box-arrow-down fs-5"></i>
+                    <span class="ms-2">Экспорт данных</span>
+                  </a>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="container ">
+        <div class="tab-pane fade show active" id="home-tab-pane" role="tabpanel" aria-labelledby="home-tab"
+             tabindex="0">
+          <div>
+            <div class="card-body">
+              <div class="container">
+                <div class="row">
+                  <table class="table table-sm ">
+                    <thead>
+                    <tr>
+                      <th data-bs-toggle="tooltip" title="№">#</th>
+                      <th data-bs-toggle="tooltip" title="Слово">Слово</th>
+                      <th data-bs-toggle="tooltip" title="Перевод">Картинка</th>
+                      <th data-bs-toggle="tooltip" title="Перевод">Перевод</th>
+                      <th data-bs-toggle="tooltip" title="Перевод">Пример</th>
+                      <th data-bs-toggle="tooltip" title="Перевод">Пример</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+
+                    {% for word in words %}
+                      <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td><b><a
+                            href="{{ word.get_absolute_url }}"> {{ word.u_eng_word }} </a></b>
+                        </td>
+                        <td>{{ word.rus_word }}</td>
+                        <td>
+                          {% with word.wordpict_set.first as wordpict %}
+                            {% if wordpict.picture %}
+                              <div class="avatar align-middle">
+                                <img src="{{ wordpict.picture.url }}" alt="{{ wordpict.description }} " class="avatar-img rounded">
+                              </div>
+                            {% else %}
+                                <p>No picture available.</p>
+                            {% endif %}
+                          {% endwith %}
+                        </td>
+                        <td>{{ word.usage_examples.first.eng_text }}</td>
+                        <td>{{ word.usage_examples.first.rus_text }}</td>
+                      </tr>
+                    {% endfor %}
+
+                    </tbody>
+                  </table>
+
+                  <div class="col-sm-8">
+                    <a href="{% url 'all_dict' %}" class="btn btn-secondary">Назад</a>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Add From File Modal -->
+  <div class="modal fade" id="addFromFileModal" tabindex="-1" aria-labelledby="messagesModalLabel" aria-hidden="true"
+       data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="messagesModalLabel">Добавление слова</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="add_from_file" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ file_form.as_p }}
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" form="add_from_file" class="btn btn-success" name="from_file">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                 class="bi bi-floppy2-fill" viewBox="0 0 16 16">
+              <path d="M12 2h-2v3h2z"></path>
+              <path
+                  d="M1.5 0A1.5 1.5 0 0 0 0 1.5v13A1.5 1.5 0 0 0 1.5 16h13a1.5 1.5 0 0 0 1.5-1.5V2.914a1.5 1.5 0 0 0-.44-1.06L14.147.439A1.5 1.5 0 0 0 13.086 0zM4 6a1 1 0 0 1-1-1V1h10v4a1 1 0 0 1-1 1zM3 9h10a1 1 0 0 1 1 1v5H2v-5a1 1 0 0 1 1-1"></path>
+            </svg>
+            Добавить слово
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- Delete Confirmation Modal -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="messagesModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="messagesModalLabel">Удаление словаря</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Вы собираетесь удалить словарь <b>"{{dict_.dict_name}}"</b> <br>
+          Внимание: Это действие удалит все слова, связанные с этим словарём.<br>
+          Удаление не может быть отменено.
+          <form id="delete-form" action="{% url 'delete_dictionary' dict_id=dict_.id %}" method="post">
+            {% csrf_token %}
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+          <button type="submit" class="btn btn-danger"
+                  onclick="document.getElementById('delete-form').submit()">Удалить
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- To Exel Modal -->
+  <div class="modal fade" id="toExelModal" tabindex="-1" aria-labelledby="messagesModalLabel"
+       aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="messagesModalLabel">Экспорт в эксель файл</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="to_exel" action="{% url 'dictionary' dict_name=dict_.slug %}"
+                class="d-flex flex-wrap">
+            {% csrf_token %}
+          </form>
+          Ваш словарь "{{ dict_.dict_name }}" теперь доступен в формате Excel! <br>
+          Слова записаны в файл {{ dict_.slug }}.xlsx. <br>
+          Загружайте и используйте с удовольствием!
+
+        </div>
+        <div class="modal-footer">
+
+          <button type="submit" form="to_exel" class="btn btn-success" name="to_exel">Скачать файл</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- Edit Dictionary Modal -->
+  <div class="modal fade" id="dictEditModal" tabindex="-1" aria-labelledby="messagesModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title text-nowrap" id="exampleModalLabel">Редактирование данных словаря</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post" id="dictionary_edit" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="container">
+              <div class="row">
+                <div class="col-sm-6">{{ dict_form.dict_name }}</div>
+                <div class="col-sm-3">{{ dict_form.level }}</div>
+                <div class="col-sm-3">
+                  <input class="form-check-input" type="checkbox" id="{{ dict_form.published.id_for_label }}"
+                         name="{{ dict_form.published.name }}" {{ dict_form.published.value|yesno:"checked," }}>
+                  <label class="form-check-label" for="{{ dict_form.published.id_for_label }}">Published</label>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">{{ dict_form.description }}</div>
+              </div>
+              <div class="row">
+                <div class="col-sm-9">
+                  <input class="form-control form-control-sm py-1" id="formFileSm" type="file" name="picture">
+                </div>
+                <div class="col-sm-3">
+                  <button type="submit" name="dictionary_edit" class="btn btn-secondary btn-sm">Сохранить изменения
+                  </button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  <script>
+      // Обработчик нажатия кнопки отправки формы
+      document.getElementById('submitButton').addEventListener('click', function () {
+          document.getElementById('comb_form').submit();
+      });
+  </script>
+
+
+{% endblock %}
