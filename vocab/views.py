@@ -14,7 +14,8 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpRe
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse
 from typing import Optional, Tuple
-from sieve.settings import COINS_PER_LEARNED_WORD, COINS_PER_ANSWER
+# from sieve.settings import COINS_PER_LEARNED_WORD, COINS_PER_ANSWER
+from django.conf import settings
 from .forms import LoginForm, OptedDictForm, ActiveDictForm, UsageForm, WordForm, UserRegistrationForm, UserEditForm, \
     ProfileEditForm, WordPictForm, AddDictionaryForm, HintTypeForm, WordImportForm
 from .models import Profile, PersDict, PubDict, Word, History, UsageExample, WordPict, WordPronunciation, UniqueEngWord
@@ -154,11 +155,11 @@ def handle_user_translation(request, user_service) -> None:
             if q_ok == '6':
                 success_message = (
                     f'<img src="/static/img/coins.png" alt="Изображение"> Слово "{word}" выучено! '
-                    f'За это начислено {COINS_PER_LEARNED_WORD} монет'
+                    f'За это начислено {settings.COINS_PER_LEARNED_WORD} монет'
                 )
                 messages.success(request, success_message)
-                prize = COINS_PER_LEARNED_WORD
-            user_service.update_coins(prize + COINS_PER_ANSWER)
+                prize = settings.COINS_PER_LEARNED_WORD
+            user_service.update_coins(prize + settings.COINS_PER_ANSWER)
 
             user_service.update_treasure(1)  # Начисляем одну монету за правильный ввод слова
 
